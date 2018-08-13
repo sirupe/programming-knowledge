@@ -36,4 +36,65 @@ public class ChildClass extends ParentsClass {
 }
 ```
 final 키워드가 붙은 메소드는 오버라이드를 할 수 없다. final 키워드의 목적이 '수정불가능' 인 부분을 고려해보면 당연한 동작이다.
-그렇다면 사용
+그렇다면 사용할 때는 어떤 제한이 있을까?
+```java
+public class ChildClass extends ParentsClass {
+    public ChildClass() {
+        finalParentsMethod();
+    }
+}
+```
+```java
+public static void main(String[] args) {
+    new ParentsClass().finalParentsMethod();
+}
+```
+자식클래스의 생성자에서 호출하거나 새로 생성한 인스턴스에서 해당 메소드를 호출하는 것에는 전혀 제한사항이 없다.
+그렇다, `final` 키워드는 사용항의 제한을 두기 위한 키워드가 아닌 것이다. 단지 '수정불가', '작성자가 선언한 형태로만 사용가능'의 기능을 가진다.
+
+마지막으로 final 이 붙은 변수에는 어떠한 제한이 있는지 확인해보자.
+
+###3. final 변수
+먼저 일반 클래스 내부에 final 변수를 선언해보자.
+```java
+public class ParentsClass {
+    final String mother; // lint time 에서 바로 에러가 발생한다.
+}
+```
+일단 변수만 선언하면 바로 lint time 에서 에러가 발생한다. 그도 그럴것이 '변경할 수 없다' 는 건 변수가 생성되기 전에 값이 들어가 있어야 한다는 의미이기도 하다. 그렇다면 2가지 방법으로 초기화가 가능할 것이다.
+
+첫번째로, 변수 선언시 바로 초기화하는 방법이다.
+```java
+public class ParentsClass {
+    final String mother = "Mrs.Lee";
+}
+```
+두번째로, 생성자메서드에서 초기화하는 방법이다.
+```java
+public class ParentsClass {
+    final String mother;
+    
+    public ParentsClass() {
+        this.mother = "Mrs.Lee";
+    }
+}
+```
+에러는 사라졌다. 클래스가 '인스턴스화 될 때' 값을 초기화 해준다면 문제없이 final 변수를 사용할 수 있다는 것을 알았다. 그렇다면 final 변수의 getter, setter 를 만들 수 있을까? (다른 메서드에서 값을 변경한다거나 뭐 그런)
+```java
+public class ParentsClass {
+    private final String mother = "Mrs.Lee";
+    
+    public String getMother() {
+        return mother;
+    }
+    
+    public void setMother(String mother) {
+        this.mother = mother;
+        // lint time 에 이 부분에서 에러가 발생한다.
+        // final 변수는 초기값이 정해지면 이 값을 변경할 수 없다.
+    }
+}
+```
+(예상했던 대로) final 변수는 값을 재설정할 수 없다. 이렇게 setter 메소드를 만든다거나 다른 메소드에서 값을 변경한다거나 상속받은 곳에서 값을 변경한다거나 하는 등등의 모든 '변경작업' 이 불가능하다.
+
+그래서 **클래스에서 공동으로 사용하는(static) 변경할 수 없는(final)** 요소를 선언할 때에는 `static final` 예약어들을 앞에 붙여 선언한다. final 의 결정적인 기능인 '런타임 내에 변수가 변경될 가능성이 없는' 점이 상수임을 가능케 하는 것이다.
