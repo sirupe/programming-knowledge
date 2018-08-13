@@ -35,15 +35,23 @@ public class ChildClass extends ParentsClass {
     public void finalParnetsMethod() {}
 }
 ```
-final 키워드가 붙은 메소드는 오버라이드를 할 수 없다. final 키워드의 목적이 '수정불가능' 인 부분을 고려해보면 당연한 동작이다.
-그렇다면 사용할 때는 어떤 제한이 있을까?
+
+final 키워드가 붙은 메소드는 오버라이드를 할 수 없다. final 키워드의 목적이 '수정불가능' 인 부분을 고려해보면 당연한 동작이다. 그렇다면 자식 클래스에서 부모 클래스에 final 로 선언된 메소드를 사용할 수는 있을까?
 ```java
 public class ChildClass extends ParentsClass {
     public ChildClass() {
+        // 별다른 제약 없이 사용이 가능하다
         finalParentsMethod();
     }
 }
 ```
+final 키워드는 '변경불가' 의 기능을 하므로 당연히 '접근제한'과는 관련이 없다. '접근제한'을 시키려면 엄한 final 을 붙이지 말고 '접근제어자' 키워드를 사용하도록 하자. 
+
+더불어 final 키워드를 붙임으로써 오버라이드가 안되는 것은  접근제어자를 사용해서 오버라이드를 할 수 없는 것과는 엄연히 의미가 다른 것이다. final 키워드를 이용한 것은 '어디서든 변경을 할 수 없게 하겠다'는 취지인 것이고 '접근제어자' 를 이용한 것은 '특정 밤위 밖에서는 사용할 수 없게 하겠다'는 취지인 것이다. 
+
+일례로 protected 나 default 메소드인 경우 범위만 가능하다면 메소드를 오버라이드 하여 사용할 수 있는 것이다.
+final 키워드가 붙은 메소드는 오버라이드를 할 수 없다. final 키워드의 목적이 '수정불가능' 인 부분을 고려해보면 당연한 동작이다.
+그렇다면 사용할 때는 어떤 제한이 있을까?
 ```java
 public static void main(String[] args) {
     new ParentsClass().finalParentsMethod();
